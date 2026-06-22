@@ -6,34 +6,34 @@ from db.models import (Genre, Actor)
 
 
 def main() -> QuerySet:
-    genre = Genre.objects.all()
-    actor = Actor.objects.all()
-    for genres in genre:
-        genre = Genre.objects.create(name={genres.name})
+    genres_data = [("Western",), ("Action",), ("Dramma",)]
+    for name, in genres_data:
+        Genre.objects.create(name=name)
 
-    for actors in actor:
-        actor = Actor.objects.create(
-            first_name={actors.first_name}, last_name={actors.last_name}
-        )
+    actors_data = [
+        ("George", "Klooney"),
+        ("Kianu", "Reaves"),
+        ("Scarlett", "Keegan"),
+        ("Will", "Smith"),
+        ("Jaden", "Smith"),
+        ("Scarlett", "Johansson"),
+    ]
+
+    for first_name, last_name in actors_data:
+        Actor.objects.create(first_name=first_name, last_name=last_name)
 
     genre = Genre.objects.get(name="Dramma")
     genre.name = "Drama"
     genre.save()
-
     actor = Actor.objects.get(last_name="Klooney")
     actor.last_name = "Clooney"
     actor.save()
-
     actor = Actor.objects.get(first_name="Kianu", last_name="Reaves")
     actor.first_name = "Keanu"
     actor.last_name = "Reeves"
     actor.save()
 
-    genre = Genre.objects.get(name="Action")
-    genre.delete()
+    Genre.objects.get(name="Action").delete()
+    Actor.objects.filter(first_name="Scarlett").delete()
 
-    actor = Actor.objects.filter(first_name="Scarlett")
-    actor.delete()
-
-    for actors in actor:
-        return Actor.objects.filter(last_name="Smith").order_by("first_name")
+    return Actor.objects.filter(last_name="Smith").order_by("first_name")
